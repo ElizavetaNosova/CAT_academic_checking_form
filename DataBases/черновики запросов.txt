@@ -1,0 +1,84 @@
+Черновики запросов для базы данных
+
+create_world:
+
+"CREATE (old_lady:Person {name: 'Anna Alexandrovna', role: 'flat owner'})
+CREATE (daughter:Person {role: 'relative'})
+CREATE (Moscow:City)
+CREATE (Berlin:City)
+CREARE (flat: place)
+CREATE (unbearable:streak {description:'To comment how expensive is oatmeal which other people buy. To move other people's things. To discuss which actors are jews'})
+CREATE (join)-[:HAVE_STREAK]->(old_lady)-[:HAVE_STREAK]->(unbearable)
+CREATE (join)-[:RELATIONSHIP]->(old_lady)-[:PARENT]->(doughter)
+CREATE (join)-[:RELATIONSHIP]->(daughter)-[:CHILD]->(old_lady)
+CREATE (join)-[:STAY_IN]->(daughter)-[:STAY_IN]->(Berlin)
+CREATE (join)-[:STAY_IN]->(old_lady)-[:STAY_IN]->(Moscow)
+CREARE (join)-[:STAY_IN]->(old_lady)-[:STAY_IN]->(flat)"
+
+
+Проверить, есть ли квартирант:
+MATCH n:roomer
+!ПОСМОТРЕТЬ, КАК МЭТЧИТЬ СВЯЗЬ
+RETURN n
+
+Добавить квартиранта:
+CREATE (roomer:person {id: %id})
+MATCH n:roomer
+WHERE n.id = %id
+CREATE (join)-[:STAY_IN]->(n)-[:STAY_IN]->(flat)
+
+
+Переезд из Москвы в Берлин
+
+
+
+
+Переезд из Берлина в Москву
+
+
+
+
+Удалить квартиранта:
+
+
+
+take_new_cd(dvd_type):
+
+"CREATE (%dvd:DVD) {id:%id, time: %time, available_time: %time}"
+%{'dvd': 'dvd'+str(id), 'id': id, 'time': len(dvd_type)
+
+
+
+record_program(program, *dvd_types):
+
+Найти последний dvd типа:
+"MATCH n:DVD
+WHERE n.time == %type_time
+RETURN n.id,  n.available_type ORDER BY n.id"
+%{type_time: len(dvd_type)
+
+
+Записать программу:
+CREATE (XX_century:program {id: %id, title: %title, len: %programlen, annotation: %annotation})
+
+
+Связать программу с диском (dvd_id):
+
+MATCH n:DVD
+WHERE n.id = %dvd_id
+MATCH p:program
+WHERE p.id = %program_id
+CREATE (join)-[:DVD]->(n)-[:Contain]->(m)
+CREATE (join)-[:DVD]->(m)-[:Recorded_at]->(n)
+
+
+Связать диск с человеком:
+MATCH n:dvd
+WHERE n.id = %id
+CREATE (join)-[:STAY_IN]->(%person)-[:recorded]->(n)
+
+
+Показать самую длинную передачу:
+
+
+
