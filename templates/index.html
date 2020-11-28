@@ -19,19 +19,22 @@
 
 	<script>
 
+
 	$('#docx-file').change(function() {
 		$('#docx-form').ajaxSubmit({
 			method: 'post',
 			type: 'post',
 			url: '/upload_docx_file',
-			target: '#docx_frame',
 			success: function(data) {
 				// После загрузки файла очистим форму.
-				//$('#docx-form')[0].reset();
 				console.log(data);
-				//$("#docx_frame").attr("src",);
+				window.location.replace(encodeURI("/spelling_form?file_id=" + data.file_id));
 			}
-		});
+		// }).done(function(data) {
+		// 		// После загрузки файла очистим форму.
+		// 		console.log(data);
+		// 		//window.location.replace(encodeURI("/spelling_form?file_id=" + data.file_id));
+	 	});
 	});
 	</script>
 </body>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+  	<link rel='stylesheet' href="{{ url_for('static', filename='aspects_style.css') }}">
+    <title>Проверка текста: орфография</title>
+  </head>
+  <body>
+    Для каждой орфографической ошибки выберите вариант исправления
+
+    <div class="spelling_options">
+      
+    </div>
+
+    <script type=text/javascript src="{{url_for('static', filename="jquery-3.5.1.min.js") }}"></script> 
+
+    <script type=text/javascript src="{{url_for('static', filename="jquery.form.min.js") }}"></script> 
+    <script type="text/javascript">
+      var urlParams = new URLSearchParams(window.location.search);
+      var file_id = urlParams.get('file_id');
+      console.log(urlParams);
+      console.log(file_id);
+
+      $.get(`/get_spelling_problems/${file_id}`, function( data ) {
+          console.log(data);
+          var spelling_problems = data.spelling_problems;
+          console.log(spelling_problems);
+          spelling_problems.forEach(function(problem, problem_id){
+              var formattedText = problem.context;
+              var correctionOptions = problem.s;
+              problemHtml = formattedText +'<br>';
+              problemHtml += `<input type="radio" name=${problem_id} value="не исправлять" checked="checked"><label for=${problem_id}>не исправлять</label><br>`;
+              correctionOptions.forEach(function(option){
+                  problemHtml += `<input type="radio" name=${problem_id} value=${option}><label for=${problem_id}>${option}</label><br>`;
+              });
+              $('.spelling_options').append(problemHtml);
+          });
+      });
+      
+// <input type="radio" id="male" name="gender" value="male">
+// <label for="male">Male</label><br>
+// <input type="radio" id="female" name="gender" value="female">
+// <label for="female">Female</label><br>
+// <input type="radio" id="other" name="gender" value="other">
+// <label for="other">Other</label>
+  
+
+    </script>
+
+
+
+
+    <!-- def check_spelling(file_id):
+    return [{'code': 1,
+  'pos': 456,
+  'row': 1,
+  'col': 440,
+  'len': 15,
+  'word': 'распостроняется',
+  's': ['распространяется', 'распостраняется', 'распростроняется'],
+  'problem_type': 'spelling',
+  'text': 'подвиргаются',
+  'end': 471},
+ {'code': 1,
+  'pos': 550,
+  'row': 1,
+  'col': 534,
+  'len': 12,
+  'word': 'подвиргаются',
+  's': ['подвергаются'],
+  'problem_type': 'spelling',
+  'end': 562}]
+ -->
+  	
+</body> 
+</html>
+
