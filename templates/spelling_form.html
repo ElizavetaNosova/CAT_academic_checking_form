@@ -10,6 +10,7 @@
     <div class="spelling_options">
       
     </div>
+    <input type="button" name="submit_spelling" value="Внести исправления и продолжить" />
 
     <script type=text/javascript src="{{url_for('static', filename="jquery-3.5.1.min.js") }}"></script> 
 
@@ -34,8 +35,40 @@
               });
               $('.spelling_options').append(problemHtml);
           });
+          $("input[name='submit_spelling']").bind('click', function(){
+            spelling_problems.forEach(function(problem, problem_id){
+                var chosen_value = $(`input[name=${problem_id}]:checked`).val();
+                problem['chosen_value'] = chosen_value;
+            });
+            //ПРОТЕСТИРОВАТЬ ЭТУ СТРОКУ
+            var textCorrections = {'file_id': file_id,
+                                  'new_file_id': file_id + '_spelling', 
+                                  'spelling_problems': spelling_problems};
+
+            $.ajax({
+                type: "POST",
+                url: "/correct_spelling",
+                data: textCorrections,
+                success: window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+                //добавить случай неуспеха
+            });                      
+
+            window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+          })
       });
-      
+
+     // $("input[name='submit_spelling']").bind('click', function(){
+     //   alert('Получилось выбрать кнопку');
+     // })
+
+
+    //  $("input[name='submit_spelling']").bind('click', function(){
+    //    spelling_problems.forEach(function(problem, problem_id){
+    //       $('input[name=${problem_id}]:checked').val();
+    //       problem['chosenOption'] = chosenOption;
+    //     });
+    //     console.log(spelling_problems);
+    // })
 // <input type="radio" id="male" name="gender" value="male">
 // <label for="male">Male</label><br>
 // <input type="radio" id="female" name="gender" value="female">
