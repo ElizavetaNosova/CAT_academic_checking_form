@@ -50,7 +50,8 @@
                 type: "POST",
                 url: "/correct_spelling",
                 dataType: "json",
-                data: textCorrections,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(textCorrections),
                 success: function(){
                   console.log('success');
                   //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));

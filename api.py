@@ -100,7 +100,7 @@ def correct_spelling():
     # corrected_text = spelling.make_changes(text, spelling_problems)
     # with open(os.path.join(app.config['UPLOAD_FOLDER'], new_file_name), encoding='utf-8') as f:
     #     f.write(corrected_text)
-    print(request.form)
+    print(request.json)
     return json.dumps({'success':True}), 200
     
 
