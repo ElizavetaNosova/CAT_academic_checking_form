@@ -42,7 +42,8 @@ def get_text(file_name):
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     file = request.files['file']
-    file_id = uid.uuid1()
+    file_id = uuid.uuid1().hex
+    print('id type', type(file_id))
     file_name = file_id + '.' + file.filename.split('.')[-1]
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
     if file.filename.split('.')[-1] != 'txt':
@@ -51,55 +52,56 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], txt_name))
     return jsonify({'file_id': file_id})
 
-# def check_spelling(file_id):
-#     spellchecker = 
-#     return [{'code': 1,
-#   'pos': 456,
-#   'row': 1,
-#   'col': 440,
-#   'len': 15,
-#   'word': 'распостроняется',
-#   's': ['распространяется', 'распостраняется', 'распростроняется'],
-#   'problem_type': 'spelling',
-#   'text': 'подвиргаются',
-#   'end': 471,
-#   'context': 'ЗДЕСЬ БУДЕТ КОНТЕКСТ'},
-#  {'code': 1,
-#   'pos': 550,
-#   'row': 1,
-#   'col': 534,
-#   'len': 12,
-#   'word': 'подвиргаются',
-#   's': ['подвергаются'],
-#   'problem_type': 'spelling',
-#   'end': 562,
-#   'context': 'ЗДЕСЬ БУДЕТ КОНТЕКСТ'}]
+def check_spelling(file_id):
+    return [{'code': 1,
+    'pos': 456,
+    'row': 1,
+    'col': 440,
+    'len': 15,
+    'word': 'распостроняется',
+    's': ['распространяется', 'распостраняется', 'распростроняется'],
+     'problem_type': 'spelling',
+    'text': 'подвиргаются',
+     'end': 471,
+     'context': 'ЗДЕСЬ БУДЕТ КОНТЕКСТ'},
+     {'code': 1,
+    'pos': 550,
+    'row': 1,
+    'col': 534,
+     'len': 12,
+    'word': 'подвиргаются',
+    's': ['подвергаются'],
+    'problem_type': 'spelling',
+    'end': 562,
+    'context': 'ЗДЕСЬ БУДЕТ КОНТЕКСТ'}]
 
 @app.route('/get_spelling_problems/<file_id>', methods=['GET'])
 def get_spelling_data(file_id):
-    file_name = file_id + '.txt'
-    with open(os.path.join(app.config['UPLOAD_FOLDER'], file_name), encoding='utf-8') as f:
-        text = f.read()
-    spellchecker = spelling.SpellChecker()
-    try:
-        spelling_problems = spellchecker.check_spelling(text)
-    except spelling.ParagraphLengthException:
-        #придумать обработку исключения
-        spelling_problems = []
+    # file_name = file_id + '.txt'
+    # with open(os.path.join(app.config['UPLOAD_FOLDER'], file_name), encoding='utf-8') as f:
+    #     text = f.read()
+    # spellchecker = spelling.SpellChecker()
+    # try:
+    #     spelling_problems = spellchecker.check_spelling(text)
+    # except spelling.ParagraphLengthException:
+    #     #придумать обработку исключения
+    #     spelling_problems = []
     return jsonify({'spelling_problems': check_spelling(file_id)})
 
 @app.route('/correct_spelling', methods=['POST'])
 def correct_spelling():
-    corrections = request.json
-    #написать проверку входных данных
-    file_name = corrections['file_id'] + '.txt'
-    new_file_name = corrections['new_file_id'] + '.txt'
-    spelling_problems = corrections['spelling_problems']
-    with open(os.path.join(app.config['UPLOAD_FOLDER'], file_name), encoding='utf-8') as f:
-        text = f.read()
-    corrected_text = spelling.make_changes(text, spelling_problems)
-    with open(os.path.join(app.config['UPLOAD_FOLDER'], new_file_name), encoding='utf-8') as f:
-        f.write(corrected_text)
+    # corrections = request.json
+    # #написать проверку входных данных
+    # file_name = corrections['file_id'] + '.txt'
+    # new_file_name = corrections['new_file_id'] + '.txt'
+    # spelling_problems = corrections['spelling_problems']
+    # with open(os.path.join(app.config['UPLOAD_FOLDER'], file_name), encoding='utf-8') as f:
+    #     text = f.read()
+    # corrected_text = spelling.make_changes(text, spelling_problems)
+    # with open(os.path.join(app.config['UPLOAD_FOLDER'], new_file_name), encoding='utf-8') as f:
+    #     f.write(corrected_text)
+    print(request.json)
+    return json.dumps({'success':True}), 200
     
 
 

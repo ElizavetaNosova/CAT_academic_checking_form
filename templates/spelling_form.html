@@ -49,11 +49,13 @@
                 type: "POST",
                 url: "/correct_spelling",
                 data: textCorrections,
-                success: window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+                success: function(){
+                  console.log('success');
+                  //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+                }
                 //добавить случай неуспеха
             });                      
 
-            window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
           })
       });
 
