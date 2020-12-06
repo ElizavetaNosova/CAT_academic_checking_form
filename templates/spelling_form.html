@@ -39,6 +39,7 @@
             spelling_problems.forEach(function(problem, problem_id){
                 var chosen_value = $(`input[name=${problem_id}]:checked`).val();
                 problem['chosen_value'] = chosen_value;
+                console.log(spelling_problems);
             });
             //ПРОТЕСТИРОВАТЬ ЭТУ СТРОКУ
             var textCorrections = {'file_id': file_id,
