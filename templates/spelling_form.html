@@ -49,6 +49,7 @@
             $.ajax({
                 type: "POST",
                 url: "/correct_spelling",
+                dataType: "json",
                 data: textCorrections,
                 success: function(){
                   console.log('success');
