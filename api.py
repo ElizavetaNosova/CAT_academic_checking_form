@@ -3,8 +3,7 @@ import os
 from flask import *
 import spelling
 import uuid 
-#import docx2pdf
-#import docx
+import charset_normalizer
 
 UPLOAD_FOLDER = 'student_texts'
 ALLOWED_EXTENSIONS = {'txt', 'docx'}
@@ -39,18 +38,32 @@ def render_spelling_form():
 def get_text(file_name):
     pass
 
+def get_encoding(txt_path):
+    with open (txt_path, 'rb') as f:
+        fileContent = f.read()
+    return charset_normalizer.detect(fileContent)['encoding']
+
+def txt_is_correct(txt_path):
+    return get_encoding(txt_path) == 'utf_8'
+
+
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     file = request.files['file']
     file_id = uuid.uuid1().hex
     print('id type', type(file_id))
-    file_name = file_id + '.' + file.filename.split('.')[-1]
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
-    if file.filename.split('.')[-1] != 'txt':
+    if file.filename.split('.')[-1] == 'txt':
+        txt_name = file_id + '.' + file.filename.split('.')[-1]
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], txt_name))
+    else:
         file_text = get_text(file_name)
         txt_name = file_id + '.txt'
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], txt_name))
-    return jsonify({'file_id': file_id})
+    is_correct = txt_is_correct(os.path.join(app.config['UPLOAD_FOLDER'], txt_name))
+    if is_correct:
+        return jsonify({'file_id': file_id})
+    else:
+        return 'Сохраните файл в формате utf-8', 400
 
 def check_spelling(file_id):
     return [{'code': 1,
@@ -111,5 +124,5 @@ def correct_spelling():
 #@app.route('/api/v1/resources/books/all', methods=['GET'])[]
 #    return jsonify(books)
 
-
-app.run()
+if __name__ == '__main__':
+    app.run()

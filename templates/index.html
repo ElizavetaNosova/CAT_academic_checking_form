@@ -4,6 +4,10 @@
     <title>Проверьте ваш академический текст</title>
   </head>
   <body>
+
+     <div id='upload_instruction'>
+        Загрузите txt-файл в кодировке utf-8
+     </div>
      <form id="docx-form" method="post">
 		<input accept='.txt, .docx' id="docx-file" type="file" name="file">
 	</form>
@@ -25,7 +29,11 @@
 				// После загрузки файла очистим форму.
 				console.log(data);
 				window.location.replace(encodeURI("/spelling_form?file_id=" + data.file_id));
-			}
+			},
+            error: function(error){
+                console.log(error);
+                $('#upload_instruction').text(`${error.responseText}. Исправьте и повторите попытку`);
+            }
 		// }).done(function(data) {
 		// 		// После загрузки файла очистим форму.
 		// 		console.log(data);
