@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+	<link rel='shortcut icon' type='image/x-icon' href="{{url_for('static', filename='images/favicon.ico') }}" />
     <title>Проверьте ваш академический текст</title>
   </head>
   <body>
@@ -12,9 +13,9 @@
 		<input accept='.txt, .docx' id="docx-file" type="file" name="file">
 	</form>
 	 
-	<script type=text/javascript src="{{url_for('static', filename="jquery-3.5.1.min.js") }}"></script> 
+	<script type=text/javascript src="{{url_for('static', filename='jquery-3.5.1.min.js') }}"></script> 
 
-	<script type=text/javascript src="{{url_for('static', filename="jquery.form.min.js") }}"></script> 
+	<script type=text/javascript src="{{url_for('static', filename='jquery.form.min.js') }}"></script> 
 
    <!-- <iframe src="http://localhost:5000/uploads/student_text.txt" id="docx_frame" height="1000" width="1000"></iframe> -->
 	<script>
