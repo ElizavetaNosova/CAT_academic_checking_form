@@ -115,6 +115,15 @@ def correct_spelling():
     #     f.write(corrected_text)
     print(request.json)
     return json.dumps({'success':True}), 200
+
+@app.route('/possible_aspects', methods=['GET'])
+def possible_aspects():
+    ##Сюда добавить английский вариант, будем делать английскую версию
+
+    ##Переписать функцию, если будут аспекты, которые доступны не всегда
+    possible_aspects = [{'id': 'morphology','russian': 'Словоформы, не представленные в CAT'},
+                        {'id': 'duplicates','russian': 'Повторы'}]
+    return jsonify({'possible_aspects': possible_aspects})
     
 
 

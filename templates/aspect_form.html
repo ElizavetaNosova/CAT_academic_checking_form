@@ -32,6 +32,51 @@
   <script type=text/javascript src="{{url_for('static', filename="highlighting.js") }}"></script> 
 
   	<script>
+      var possibleAspects;
+      let checkingOptionsDiv = document.getElementById("checking_options");
+       $.get(`/possible_aspects`, function( data ) {
+          console.log(data);
+          possibleAspects = data.possible_aspects;
+          //Добавить получение языка + английский в данных, если будем делать перевод
+          let language = 'russian';
+        possibleAspects.forEach(function(possibleAspect, aspectId){
+          let checkbox = document.createElement("input"); 
+          checkbox.setAttribute("type", "checkbox");
+          checkbox.setAttribute("class", "nextCheckingAspectCheckbox");
+          let labelText = possibleAspect[language] ? possibleAspect[language] : possibleAspect.id;
+          let checkboxId = `nextCheckingAspectCheckbox_${aspectId}`
+          checkbox.setAttribute("id", checkboxId);
+          checkbox.setAttribute("value", possibleAspect.id);
+        //  checkbox.setAttribute("label", possibleAspect[language]);
+          checkbox.checked = false; 
+          checkingOptionsDiv.appendChild(checkbox);
+
+          let checkboxLabel = document.createElement("Label");
+          checkboxLabel.innerHTML = labelText;
+          checkboxLabel.setAttribute("for",checkboxId);
+          checkingOptionsDiv.appendChild(checkboxLabel);
+        });
+      });
+
+
+        let chosenNextCheckAspects;
+        $("input[name='submit_checking']").bind('click', function(){
+          chosenNextCheckAspects = [];
+          $('input[class=nextCheckingAspectCheckbox]').each(function () {
+            if ($(this).prop('checked')) {
+            chosenNextCheckAspects.push(this.value)
+               }
+            });
+        console.log(chosenNextCheckAspects);
+        //   possibleAspects.forEach(function(aspect, aspectId){
+        //     console.log(aspect);
+        //     let aspectCheckboxId = `nextCheckingAspectCheckbox_${aspectId}`;
+        //     if ($("input[id=aspectCheckboxId]").prop('checked')) {
+        //         chosenNextCheckAspects.push(aspect.id);
+        //       }
+        //   console.log(chosenNextCheckAspects);
+        // });
+      });
 
   		var text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi sunt explicabo aliquid, hic ipsum? Nesciunt sed consequatur velit cumque laboriosam quia eligendi, totam, provident sunt natus, consequuntur possimus! Maxime molestias, ipsam voluptate doloremque. Eum iste odit, possimus, ipsam totam, exercitationem officia, impedit animi in fuga nam? Delectu nihil neque cum'
   		var mistakesPositions = {

@@ -1,10 +1,10 @@
 # Project Title
 
-Simple overview of use/purpose.
+Academic text checking tool: web part
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+This is a part of the academic text checking websute, which includes saving a student text, editing interface and collecting user changes
 
 ## Getting Started
 
