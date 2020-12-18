@@ -1,7 +1,16 @@
 function addTags(text, labels) {
     if (!labels) return text;
-    const classLabels = [...labels].join(' ');
-    return `<strong class="${classLabels}">${text}</strong>`;
+    const openingTags = [...labels]
+            .map(function(label){
+                return `<strong class="${label}">`;
+            })
+            .join('');
+    const closingTags =  [...labels]
+            .map(function(label){
+                return '</strong>';
+            })
+            .join('');
+    return `${openingTags}${text}${closingTags}`;
 }
 
 
@@ -80,3 +89,18 @@ function highlightText(text, problems){
 
     return htmlParts2Highlight.join('');
 }
+
+   function getCorrectionsHtml(text, corrections, possibleAspects){
+        let class2corrections = {};
+        possibleAspects.forEach(function(aspect, aspectId){
+          //Если была запрошена проверка этого аспекта
+           //Доделать: выводить сообщение, если нет ошибок
+          if (corrections[aspect] && corrections[aspect].length>0){
+              const aspectId2Show = aspectId + 1;
+              correctionClass = `aspect${aspectId2Show}`;
+              //Функция раскраски должна знать про классы, а не про содержательные индекмы
+              class2corrections[correctionClass] = corrections[aspect];
+            }
+        })
+        return  highlightText(text, class2corrections);
+      }

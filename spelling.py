@@ -19,8 +19,8 @@ class SpellChecker:
         problems = []
         if sucsess:
             problems = response.json()
-            print('получены результаты запроса')
-        print(problems)
+           # print('получены результаты запроса')
+        #print(problems)
         return problems, sucsess
 
     def check_spelling(self, text):
@@ -29,14 +29,14 @@ class SpellChecker:
             problems, sucsess = self._split_and_check(paragraphs)
         else:
             raise ParagraphLengthException(self.__checker_limit)
-        print('все запросы выполнены')
-        print(problems)
+       # print('все запросы выполнены')
+        #print(problems)
         problems_with_context_and_fixed_ids = self.__add_context_and_fix_ids(problems, paragraphs)
-        print('все данные отформатированы')
+        #print('все данные отформатированы')
         text_problems = []
         for paragraph_problems in problems_with_context_and_fixed_ids:
             text_problems += paragraph_problems
-        return {'problems': text_problems, 'sucsess': sucsess}
+        return {'problems': text_problems, 'all_paragraphs_sucsess': sucsess}
 
     def _split_and_check(self, paragraphs):
         spelling_problems = []
@@ -64,7 +64,7 @@ class SpellChecker:
         for problems, paragraph in zip(paragraph_problems, paragraphs):
             if problems:
                 sentences_with_id = self._get_sentences_with_id(paragraph)
-                print('получены айди предложений')
+               # print('получены айди предложений')
                 current_sent_id = 0
                 for problem in problems:
                     current_sent_data = sentences_with_id[current_sent_id]
@@ -76,16 +76,15 @@ class SpellChecker:
                     problem['context'] = current_sent
                     problem['pos'] += current_beginning_id
                     problem['end'] = problem['pos'] + problem['len']
-                    problem['end'] += current_beginning_id
-                    print('отформатирован абзац')
+                   # print('отформатирован абзац')
             current_beginning_id = current_beginning_id + len(paragraph) + 1
         return paragraph_problems
 
-    def _get_sentences_with_id(self, text, SPLITTINT_THRESHOLD=70, lang='russian'):
+    def _get_sentences_with_id(self, text, splitting_threshold=70, lang='russian'):
         '''
         Splits text into shorter fragments
         '''
-        if len(text) <= SPLITTINT_THRESHOLD:
+        if len(text) <= splitting_threshold:
             sents_with_ids = [{'sent': text, 'pos':0, 'end': len(text)-1}]
         else:
             sents = sent_tokenize(text, lang)
@@ -93,25 +92,24 @@ class SpellChecker:
             sents_with_ids = []
             prev_text_len=0
             text_copy = copy(text)
-            print(text_copy)
+           # print(text_copy)
             for sent in sents:
-                print(sent)
+                #print(sent)
                 sent_position_data = {'sent': sent}
                 position = text_copy.find(sent)
-                print(position)
+               # print(position)
                 sent_position_data['pos'] = prev_text_len + position
                 sent_position_data['end'] = prev_text_len + position + len(sent)
                 sents_with_ids.append(sent_position_data)
                 text_copy = text_copy[position + len(sent):]
                 prev_text_len = sent_position_data['end'] 
-                print(text_copy[:10])
         return sents_with_ids
 
 
-def make_changes(text, corrections, ignore_options=['не исправлять']):
-    text = copy(text)
-    corrections = sorted(corrections, reverse=True)
-    for correction in corrections:
-        if correction['chosen_value'] not in ignore_options:
-                text = text[:correction['pos']] + correction['chosen_value'] + text[correction['end']:]
-    return 
+#def make_changes(text, corrections, ignore_options=['не исправлять']):
+#    text = copy(text)
+ #   corrections = sorted(corrections, reverse=True)
+ #   for correction in corrections:
+ #       if correction['chosen_value'] not in ignore_options:
+  #              text = text[:correction['pos']] + correction['chosen_value'] + text[correction['end']:]
+  #  return 

@@ -17,12 +17,10 @@
       </div>
 
   	  <div class='editing_column source_text'>
-  	  	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi sunt explicabo aliquid, hic ipsum? Nesciunt sed consequatur velit cumque laboriosam quia eligendi, totam, provident sunt natus, consequuntur possimus! Maxime molestias, ipsam voluptate doloremque. Eum iste odit, possimus, ipsam totam, exercitationem officia, impedit animi in fuga nam? Delectus nihil neque cum
   	  </div>
   	  <div class='editing_column edited_text'>
   	  	<textarea class='edited_text_field'>
-	At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
-	</textarea>
+	    	</textarea>
   	  </div>
   	</div>
 
@@ -32,6 +30,19 @@
   <script type=text/javascript src="{{url_for('static', filename="highlighting.js") }}"></script> 
 
   	<script>
+
+    $('.edited_text').on( 'change keyup keydown paste cut', 'textarea', function (){
+        $(this).height(0).height(this.scrollHeight);
+    }).find( 'textarea' ).change();
+
+    $(window).on('resize', function(){$('textarea').change()});
+
+      let editingColumnGreetingText = 'В этой колонке вы сможете редактировать свою работу. После проверки здесь будет отображаться последняя версия вашего текста'
+      let sourceTextColumnGreetingHtml = 'После проверки в этой колонке будет отображаться ваш текст с подчеркнутыми ошибками'
+      $('.edited_text_field').text(editingColumnGreetingText);
+      $(".source_text").html(sourceTextColumnGreetingHtml);
+      var globalState = {};
+
       var possibleAspects;
       let checkingOptionsDiv = document.getElementById("checking_options");
        $.get(`/possible_aspects`, function( data ) {
@@ -52,42 +63,57 @@
           checkingOptionsDiv.appendChild(checkbox);
 
           let checkboxLabel = document.createElement("Label");
-          checkboxLabel.innerHTML = labelText;
+          checkboxLabel.innerHTML = `<strong class="aspect${aspectId+1}">${labelText}</strong><br>`;
           checkboxLabel.setAttribute("for",checkboxId);
           checkingOptionsDiv.appendChild(checkboxLabel);
         });
       });
 
-
-        let chosenNextCheckAspects;
         $("input[name='submit_checking']").bind('click', function(){
-          chosenNextCheckAspects = [];
+          let chosenNextCheckAspects = [];
           $('input[class=nextCheckingAspectCheckbox]').each(function () {
             if ($(this).prop('checked')) {
-            chosenNextCheckAspects.push(this.value)
+            chosenNextCheckAspects.push(this.value);
                }
             });
         console.log(chosenNextCheckAspects);
-        //   possibleAspects.forEach(function(aspect, aspectId){
-        //     console.log(aspect);
-        //     let aspectCheckboxId = `nextCheckingAspectCheckbox_${aspectId}`;
-        //     if ($("input[id=aspectCheckboxId]").prop('checked')) {
-        //         chosenNextCheckAspects.push(aspect.id);
-        //       }
-        //   console.log(chosenNextCheckAspects);
-        // });
+        const editedText = $('.edited_text_field').value;
+        const file_id = urlParams.get('file_id');
+     //   const editedText4NextChecking = {
+    //      'file_id': file_id,
+     //     'text': editedText,
+     //     'chosen_aspects': chosenNextCheckAspects;
+     //   }
+        $.ajax({
+          type: "POST",
+          //НАПИСАТЬ РУТ ДЛЯ СОХРАНЕНИЯ
+          url: "/save_edited_text",
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify({'text': editedText,
+                               'file_id': file_id}),
+          success: function(){
+            console.log('success');
+
+
+            
+          //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+          }
+                //добавить случай неуспеха                   
+          })
       });
+
 
   		var text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi sunt explicabo aliquid, hic ipsum? Nesciunt sed consequatur velit cumque laboriosam quia eligendi, totam, provident sunt natus, consequuntur possimus! Maxime molestias, ipsam voluptate doloremque. Eum iste odit, possimus, ipsam totam, exercitationem officia, impedit animi in fuga nam? Delectu nihil neque cum'
   		var mistakesPositions = {
-        'dummySpelling': [{
+        'aspect1': [{
           'bos':5,
           'end':10,
           'len':5,
           'text': ' ipsum',
           'mistake_type': 'dummy'
         }],
-        'dummyRepeat': [{
+        'aspect2': [{
           'bos':8,
           'end':20,
           'len':5,
@@ -109,11 +135,11 @@
 
 		$('.edited_text_field').text(text);
 
-		$('.edited_text').on( 'change keyup keydown paste cut', 'textarea', function (){
-    		$(this).height(0).height(this.scrollHeight);
-		}).find( 'textarea' ).change();
+		// $('.edited_text').on( 'change keyup keydown paste cut', 'textarea', function (){
+  //   		$(this).height(0).height(this.scrollHeight);
+		// }).find( 'textarea' ).change();
 
-		$(window).on('resize', function(){$('textarea').change()});
+		// $(window).on('resize', function(){$('textarea').change()});
   	</script>
 
 
