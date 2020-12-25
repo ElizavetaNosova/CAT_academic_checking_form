@@ -2,8 +2,7 @@
 import os
 from flask import *
 import spelling
-import uuid 
-import charset_normalizer
+import uuid
 
 
 
@@ -61,7 +60,7 @@ def get_last_version(text_id):
 app = Flask(__name__)
 app.config["DEBUG"] = True
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["ASPECT2FUNCTION"] = ASPECT2FUNCTION 
+app.config["ASPECT2FUNCTION"] = ASPECT2FUNCTION
 app.config["ASPECTS"] = ASPECTS
 
 
@@ -72,13 +71,13 @@ def home():
 
 @app.route('/aspect_form', methods=['GET'])
 def render_aspect_form():
-    return render_template('aspect_form.html')    
+    return render_template('aspect_form.html')
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
 	return send_from_directory(app.config['UPLOAD_FOLDER'],
-                     filename, as_attachment=True, 
-                     #mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document') 
+                     filename, as_attachment=True,
+                     #mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                      mimetype = 'content-type=text/plain; charset=utf-8')
 
 @app.route('/spelling_form')
@@ -89,25 +88,13 @@ def render_spelling_form():
 def get_text(file_name):
     pass
 
-def get_encoding(txt_path):
-    with open (txt_path, 'rb') as f:
-        fileContent = f.read()
-    return charset_normalizer.detect(fileContent)['encoding']
-
-def txt_is_correct(txt_path):
-    return get_encoding(txt_path) == 'utf_8'
-
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     file = request.files['file']
     text_id = save_file_first_time_and_get_id()
     file_name = text_id + '_version_0.txt'
-    is_correct = txt_is_correct(os.path.join(app.config['UPLOAD_FOLDER'], txt_name))
-    if is_correct:
-        return jsonify({'file_id': file_id})
-    else:
-        return 'Сохраните файл в формате utf-8', 400
+    return jsonify({'file_id': file_id})
 
 def check_spelling(text_id):
     text = get_last_version(text_id)
@@ -134,11 +121,11 @@ def possible_aspects():
     return jsonify({'possible_aspects': possible_aspects})
 
 
-    
+
 
 
     #return redirect(url_for('uploaded_file', filename=filename))
-   
+
 # A route to return all of the available entries in our catalog.
 #@app.route('/api/v1/resources/books/all', methods=['GET'])[]
 #    return jsonify(books)
