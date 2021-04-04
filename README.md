@@ -4,7 +4,7 @@ Academic text checking tool: web part
 
 ## Description
 
-This is a part of the academic text checking websute, which includes saving a student text, editing interface and collecting user changes
+This is a part of the academic text checking websute, which includes saving a student text, editing interface and collecting user changes. Final version is presented here https://github.com/lauberto/hseling-repo-cat-and-kittens
 
 ## Getting Started
 
